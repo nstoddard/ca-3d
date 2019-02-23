@@ -1,0 +1,35 @@
+[package]
+name = "ca-3d"
+version = "0.1.0"
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = { version = "0.2.32" }
+fnv = "1.0.6"
+console_error_panic_hook = "0.1.5"
+log = "0.4.6"
+console_log = "0.1.2"
+rand = { version = "0.6.5", features = ["wasm-bindgen"] }
+cgmath = { git = "https://github.com/nstoddard/cgmath", features = ["serde"] }
+webgl-wrapper = { git = "https://github.com/nstoddard/webgl-wrapper" }
+webgl-gui = { git = "https://github.com/nstoddard/webgl-gui" }
+itertools = "0.8.0"
+
+[dependencies.web-sys]
+version = "0.3.9"
+features = [
+  "Window",
+]
+
+[profile.dev]
+opt-level = 2
+
+[profile.release]
+# TODO: re-enable when the bug in stdweb is fixed
+#lto = true
+opt-level = 3
+codegen-units = 1
+panic = "abort"

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>3D CA</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <script type="text/javascript" src="ca_3d.js"></script>
+
+    <canvas id="canvas" width="800" height="800"></canvas>
+
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", async function(event) {
+        await wasm_bindgen('ca_3d_bg.wasm');
+      });
+    </script>
+  </body>
+</html>
