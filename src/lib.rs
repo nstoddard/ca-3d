@@ -26,7 +26,7 @@ struct PlainVert3D {
     color: Color4,
 }
 
-impl Vertex for PlainVert3D {
+impl VertexData for PlainVert3D {
     const ATTRIBUTES: Attributes = &[("pos", 3), ("color", 4)];
 }
 
@@ -70,8 +70,8 @@ pub fn main() -> Result<(), JsValue> {
     console_log::init_with_level(log::Level::Trace).unwrap();
 
     if let Ok((context, screen_surface)) = GlContext::new(CANVAS_ID) {
-        let example = Example::new(context, screen_surface);
-        start_main_loop(CANVAS_ID, Box::new(example));
+        let ca_gui = CaGui::new(context, screen_surface);
+        start_main_loop(CANVAS_ID, Box::new(ca_gui));
     } else {
         window().unwrap().alert_with_message("Unable to create WebGL 2 context. Try reloading the page; if that doesn't work, switch to Firefox or Chrome.").unwrap();
     }
@@ -81,7 +81,7 @@ pub fn main() -> Result<(), JsValue> {
 
 const CANVAS_ID: &str = "canvas";
 
-struct Example {
+struct CaGui {
     context: GlContext,
     screen_surface: ScreenSurface,
     draw_2d: Draw2d,
@@ -92,7 +92,7 @@ struct Example {
     ca_mesh_edges: Mesh<PlainVert3D, PlainUniformsGl, Lines>,
 }
 
-impl Example {
+impl CaGui {
     pub fn new(context: GlContext, screen_surface: ScreenSurface) -> Self {
         let plain_program: GlProgram<PlainVert3D, PlainUniformsGl> = GlProgram::new_with_header(
             &context,
@@ -115,7 +115,7 @@ impl Example {
 
     pub fn draw(&mut self, _cursor_pos: Option<Point2<i32>>) {
         self.screen_surface
-            .clear(&self.context, &[ClearBuffer::Color(Color4::BLACK), ClearBuffer::Depth]);
+            .clear(&self.context, &[ClearBuffer::Color(Color4::BLACK.into()), ClearBuffer::Depth]);
 
         self.ca.update();
 
@@ -256,13 +256,8 @@ fn compute_cell_color(_x: usize, _y: usize, z: usize) -> Color4 {
     Color4::WHITE.lerp(Color4::WHITE.mul_srgb(0.3), z as f32 / CA_SIZE as f32)
 }
 
-impl App for Example {
-    fn render_frame(
-        &mut self,
-        _events: Vec<Event>,
-        _pressed_keys: &FnvHashSet<String>,
-        cursor_pos: Option<Point2<i32>>,
-    ) {
-        self.draw(cursor_pos);
+impl App for CaGui {
+    fn render_frame(&mut self, _events: Vec<Event>, event_state: &EventState, _dt: f64) {
+        self.draw(event_state.cursor_pos);
     }
 }
