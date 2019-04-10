@@ -1,4 +1,4 @@
-A 3D cellular automaton simulator using WebAssembly and WebGL.
+A 3D cellular automaton simulator that compiles to WebAssembly, written in Rust.
 
 ![Screenshot](screenshots/screenshot.png?raw=true)
 
